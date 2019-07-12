@@ -9,6 +9,8 @@
     <link rel="stylesheet" type="text/css" href="css/reset.css">
     <link rel="stylesheet" type="text/css" href="css/iconfont.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <!-- 添加bootstrap的css -->
+    <link rel="stylesheet" href="./js/bootstrap/css/bootstrap.min.css">
 </head>
 
 <body>
@@ -29,8 +31,65 @@
             </form>
         </div>
 
-    </div> 
+    </div>
+    <!-- 模板 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="./js/jquery-1.12.4.min.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        // 入口函数
+        $(function () {
+            // 点击函数
+            $('.input_sub').on('click', function (e) {
+                // 阻止默认行为
+                e.preventDefault();
+                // 获取参数
+                var user_name = $('.input_txt').val();
+                var password = $('.input_pass').val();
+                // 判断是否为空
+                if (user_name == '' || password == '') {
+                    $('#myModal').modal({
+                        keyboard: true,
+                    });
+                    $('.modal-body').text('账号或密码不能为空')
+
+                    return;
+                }
+                // 发送ajax请求
+                $.ajax({
+                    type: 'post',
+                    url: 'http://localhost:8000/admin/login',
+                    data: { user_name: user_name, password: password },
+                    success: function (res) {
+                        console.log(res)
+                        // 判断是否正确
+                        if (res.code == 200) {
+                            window.location.href = './index.html';
+                        } else {
+                            $('#myModal').modal({
+                                keyboard: true,
+                            });
+                            $('.modal-body').text('账号或密码错误')
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 </body>
 
 </html>
