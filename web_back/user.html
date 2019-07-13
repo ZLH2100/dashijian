@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="css/iconfont.css">
     <link rel="stylesheet" href="css/main.css">
     <script src="js/jquery-1.12.4.min.js"></script>
+    <script src="./js/bootstrap/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -24,19 +25,20 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">用户名称：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="username" value="李思思">
+                        <!-- 使用form获取数据,需要设置name = 参数名 -->
+                        <input type="text" name="username" class="form-control" id="username" value="李思思">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">昵称：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="nickname" value="思思">
+                        <input type="text" name="nickname" class="form-control" id="nickname" value="思思">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">邮箱：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="email" value="lisisi@126.com">
+                        <input type="text" name="email" class="form-control" id="email" value="lisisi@126.com">
                     </div>
                 </div>
 
@@ -44,14 +46,14 @@
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
                         <img src="images/2.jpg" alt="" class="user_pic" id="user_pic">
-                        <input type="file" id="exampleInputFile">
+                        <input type="file" name="user_pic" id="exampleInputFile">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
                     <div class="col-sm-4">
-                        <input type="password" class="form-control" id="password" value="12345678">
+                        <input type="password" name="password" class="form-control" id="password" value="12345678">
                     </div>
                 </div>
 
@@ -62,6 +64,25 @@
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- 模板 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">温馨提示</h4>
+                </div>
+                <div class="modal-body">
+                    修改成功
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">确定</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -102,6 +123,50 @@
             })
 
 
+            // 个人信息的修改
+            // 给修改添加点击事件
+            $('.btn-success').on('click', function (e) {
+                // 阻止默认行为
+                e.preventDefault();
+                // 用from表单获取参数
+                var fm = new FormData($('form')[0]);
+                $.post({
+                    url: 'http://localhost:8000/admin/userinfo_edit',
+                    data: fm,
+                    contentType: false,
+                    processData: false,
+                    success: function (res) {
+                        console.log(res)
+                        // 判断是否成功
+                        if (res.code == 200) {
+                            // 显示提示框
+                            $('#myModal').modal();
+                            // 给弹出框的确定键一个点击事件
+                            $('.btn-primary').on('click', function () {
+                                // 刷新父页面       location.reload() 刷新页面
+                                // parent.location.reload();
+
+                                // 不刷新页面,直接修改用户信息
+                                // 发送渲染用户信息的请求
+                                $.get({
+                                    url: 'http://localhost:8000/admin/getuser',
+                                    success: function (res) {
+                                        console.log(res);
+                                        if (res.code == 200) {
+                                            // 子页面查找父页面的元素   window.parent切换到父页面的window对象 
+                                            parent.$('.user_info').children('span').html('欢迎&nbsp;&nbsp;' + res.data.nickname);
+                                            parent.$('.user_info').children('img').attr('src', res.data.user_pic);
+                                            parent.$('.user_center_link').children('img').attr('src', res.data.user_pic);
+                                        }
+                                    }
+                                })
+                                // 隐藏提示框
+                                $('#myModal').modal('hide')
+                            }) 
+                        }
+                    }
+                })
+            })
         })
     </script>
 </body>
