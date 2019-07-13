@@ -39,7 +39,7 @@
                         <input type="text" class="form-control" id="email" value="lisisi@126.com">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
@@ -49,13 +49,13 @@
                 </div>
 
                 <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
-                        <div class="col-sm-4">
-                            <input type="password" class="form-control" id="password" value="12345678">
-                        </div>
+                    <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
+                    <div class="col-sm-4">
+                        <input type="password" class="form-control" id="password" value="12345678">
                     </div>
-               
-    
+                </div>
+
+
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-success">修改</button>
@@ -67,45 +67,41 @@
 
     <script>
         // 入口函数
-        $(function() {
+        $(function () {
             // 加载页面时信息的载入
-            // 用form参数的获取
-            var fm = new FormData($('form')[0]);
             $.ajax({
-                url:'http://localhost:8000/admin/userinfo_get',
-                contentType:false,
-                processData:false,
-                success:function(res) {
+                url: 'http://localhost:8000/admin/userinfo_get',
+                success: function (res) {
                     console.log(res)
                     // 判断获取是否成功
-                    if(res.code == 200) {
+                    if (res.code == 200) {
                         // 修改数据
                         // $('#username').val(res.data.username);
                         // $('#nickname').val(res.data.nickname);
                         // $('#email').val(res.data.email);
                         // $('#password').val(res.data.password);
                         // 用对象遍历做
-                        for(var key in res.data) {
-                            $('#'+res.data.key).val(res.data.key);
+                        for (var key in res.data) {
+                            $('#' + key).val(res.data[key]);
                         }
                         // 图片的数据加载
-                        $('#user_pic').attr('src',res.data.user_pic);
+                        $('#user_pic').attr('src', res.data.user_pic);
                     }
                 }
             })
 
             // 图片的预览
             // 事件change值改变事件
-            $('#exampleInputFile').on('change',function() {
+            $('#exampleInputFile').on('change', function () {
                 // 获取图片对像
                 var obj = this.files[0];
                 // 转化为临时地址
                 var url = URL.createObjectURL(obj);
                 // 修改图片
-                $('#user_pic').attr('src',url);
+                $('#user_pic').attr('src', url);
             })
 
-            
+
         })
     </script>
 </body>
