@@ -46,7 +46,16 @@
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
                         <img src="images/2.jpg" alt="" class="user_pic" id="user_pic">
-                        <input type="file" name="user_pic" id="exampleInputFile">
+                        <!--美化上传按钮
+
+                            将原按钮隐藏
+                            将找到的图片与按钮绑定
+                         -->
+                        <input type="file" style="display: none" name="user_pic" id="exampleInputFile">
+                        <br>
+                        <label for="exampleInputFile">
+                            <img src="./images/uploadFileIcon.png" alt="">
+                        </label>
                     </div>
                 </div>
 
@@ -168,7 +177,7 @@
                 })
             })
 
-            
+
         })
     </script>
 </body>
